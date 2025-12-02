@@ -98,27 +98,96 @@ if (params.get('skip') === 'true') {
     envelope.style.transform = 'translate(-50%, -50%) scale(1)';
 }
 
-// Background music autoplay handling
+// Background music autoplay handling with user interaction support
 function startAudio() {
     const bgMusic = document.getElementById('bgMusic');
+    const audioToggleBtn = document.getElementById('audioToggleBtn');
+    
     if (bgMusic) {
-    bgMusic.loop = true; // Ensure loop is set
-    bgMusic.volume = 1; // Set volume to 30% to avoid overwhelming the experience
-    bgMusic.play().catch(() => {
-        // If autoplay fails, try playing on first user interaction
-        const playOnInteraction = () => {
-        bgMusic.loop = true; // Ensure loop is enabled
-        bgMusic.play().catch(err => console.log('Audio playback error:', err));
+        bgMusic.loop = true; // Ensure loop is set
+        bgMusic.volume = 1; // Set volume to full
+        
+        // Try to play immediately
+        const playPromise = bgMusic.play();
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    // Autoplay succeeded
+                    if (audioToggleBtn) audioToggleBtn.classList.add('active');
+                })
+                .catch(() => {
+                    // Autoplay failed, wait for user interaction
+                    addPlayOnInteractionListeners();
+                });
+        }
+    }
+}
+
+function addPlayOnInteractionListeners() {
+    const bgMusic = document.getElementById('bgMusic');
+    const audioToggleBtn = document.getElementById('audioToggleBtn');
+    
+    const playOnInteraction = () => {
+        if (bgMusic && bgMusic.paused) {
+            bgMusic.loop = true;
+            bgMusic.play().then(() => {
+                if (audioToggleBtn) audioToggleBtn.classList.add('active');
+            }).catch(err => console.log('Audio playback error:', err));
+        }
+        // Remove listeners after first interaction
         document.removeEventListener('click', playOnInteraction);
         document.removeEventListener('keydown', playOnInteraction);
         document.removeEventListener('touchstart', playOnInteraction);
-        };
-        document.addEventListener('click', playOnInteraction);
-        document.addEventListener('keydown', playOnInteraction);
-        document.addEventListener('touchstart', playOnInteraction);
+    };
+    
+    document.addEventListener('click', playOnInteraction);
+    document.addEventListener('keydown', playOnInteraction);
+    document.addEventListener('touchstart', playOnInteraction);
+}
+
+// Audio toggle button handler
+function setupAudioToggle() {
+    const bgMusic = document.getElementById('bgMusic');
+    const audioToggleBtn = document.getElementById('audioToggleBtn');
+    
+    if (!audioToggleBtn || !bgMusic) return;
+    
+    audioToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        if (bgMusic.paused) {
+            bgMusic.play().then(() => {
+                audioToggleBtn.classList.remove('muted');
+                audioToggleBtn.classList.add('active');
+            }).catch(err => console.log('Audio playback error:', err));
+        } else {
+            bgMusic.pause();
+            audioToggleBtn.classList.add('muted');
+            audioToggleBtn.classList.remove('active');
+        }
     });
+    
+    // Update button state when audio ends or is paused
+    bgMusic.addEventListener('play', () => {
+        audioToggleBtn.classList.remove('muted');
+        audioToggleBtn.classList.add('active');
+    });
+    
+    bgMusic.addEventListener('pause', () => {
+        audioToggleBtn.classList.add('muted');
+        audioToggleBtn.classList.remove('active');
+    });
+    
+    // Initial state
+    if (bgMusic.paused) {
+        audioToggleBtn.classList.add('muted');
+    } else {
+        audioToggleBtn.classList.add('active');
     }
 }
 
 // Start audio after a small delay to ensure page is ready
-setTimeout(startAudio, 100);
+setTimeout(() => {
+    startAudio();
+    setupAudioToggle();
+}, 100);

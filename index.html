@@ -465,9 +465,23 @@
   </div>
 
   <!-- Background music -->
-  <audio id="bgMusic" autoplay loop preload="auto">
+  <audio id="bgMusic" loop preload="auto">
     <source src="assets/Rapunzel.mp3" type="audio/mpeg">
   </audio>
+
+  <!-- Audio toggle button -->
+  <button id="audioToggleBtn" class="audio-toggle-btn" title="Toggle music" aria-label="Toggle music">
+    <svg class="icon-speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M15.54 8.46a6.5 6.5 0 0 1 0 9.07"></path>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+    </svg>
+    <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+  </button>
 
   <script src="js/script.js"></script>
 </body>

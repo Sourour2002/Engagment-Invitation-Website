@@ -499,3 +499,85 @@ body {
 }
 
 .hidden { display: none; }
+
+/* Audio toggle button */
+.audio-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid hsl(40, 95%, 60%);
+    background: hsla(270, 50%, 8%, 0.8);
+    color: hsl(40, 95%, 60%);
+    cursor: pointer;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.audio-toggle-btn:hover {
+    background: hsla(270, 50%, 8%, 0.95);
+    border-color: hsl(45, 100%, 75%);
+    color: hsl(45, 100%, 75%);
+    transform: scale(1.1);
+}
+
+.audio-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+.audio-toggle-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.audio-toggle-btn .icon-speaker {
+    display: block;
+    position: absolute;
+}
+
+.audio-toggle-btn .icon-muted {
+    display: none;
+    position: absolute;
+}
+
+.audio-toggle-btn.muted .icon-speaker {
+    display: none;
+}
+
+.audio-toggle-btn.muted .icon-muted {
+    display: block;
+}
+
+.audio-toggle-btn.active {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 15px hsla(40, 95%, 60%, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 25px hsla(40, 95%, 60%, 0.7);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .audio-toggle-btn {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .audio-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}

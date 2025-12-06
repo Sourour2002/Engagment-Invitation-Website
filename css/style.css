@@ -651,3 +651,137 @@ body {
         height: 20px;
     }
 }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+}
+
+.letter {
+  padding: clamp(34px, 7vh, 52px);
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+}
+
+.letter > * {
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-left: 6px;
+  padding-right: 6px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.letter a,
+.letter .location,
+.letter h1,
+.letter .guest-name,
+.letter .message {
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.letter h1 {
+  font-family: 'Rapunzel', 'Great Vibes', cursive;
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  color: hsl(275, 55%, 32%);
+  margin: 0;
+  text-shadow: 0 3px 6px hsla(275, 50%, 25%, 0.25);
+  z-index: 1;
+  letter-spacing: 0.03em;
+  word-wrap: break-word;
+}
+
+.letter .guest-name {
+  font-family: 'Rapunzel', 'Great Vibes', cursive;
+  font-size: clamp(1.2rem, 5vw, 2.2rem);
+  color: hsl(275, 45%, 40%);
+  margin: 0;
+  text-shadow: 0 2px 4px hsla(275, 50%, 30%, 0.15);
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.letter .message {
+  font-family: 'Rapunzel', 'Cormorant Garamond', serif;
+  font-size: clamp(1.05rem, 3.9vw, 1.25rem);
+  line-height: 1.6;
+  color: hsl(30, 45%, 28%);
+  margin: 0;
+  z-index: 1;
+  width: 100%;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.letter .details {
+  font-family: 'Rapunzel', 'Cormorant Garamond', serif;
+  font-size: clamp(0.9rem, 2.6vw, 1rem);
+  color: hsl(30, 40%, 32%);
+  z-index: 1;
+  letter-spacing: 0.01em;
+  word-wrap: break-word;
+  hyphens: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1vh, 12px);
+  margin-bottom: clamp(12px, 3vh, 20px);
+}
+
+.letter .location {
+  font-weight: 600;
+  font-size: clamp(0.9rem, 2.7vw, 1.05rem);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.letter svg[style], .letter .flower, .letter .ribbon {
+  pointer-events: none;
+}
+
+@media (max-width: 420px) {
+  .letter {
+    padding: clamp(22px, 6vh, 30px);
+  }
+
+  .letter h1 {
+    font-size: clamp(1.6rem, 8vw, 2.6rem);
+  }
+
+  .letter .guest-name {
+    font-size: clamp(1.05rem, 5.2vw, 1.6rem);
+  }
+
+  .letter .message {
+    font-size: clamp(1rem, 4.5vw, 1.12rem);
+    line-height: 1.55;
+  }
+
+  .tap-text {
+    font-size: 15px;
+  }
+}
+
+.letter > *,
+.letter .message,
+.letter h1,
+.letter .guest-name,
+.letter .details,
+.letter a,
+.letter .location {
+  max-width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  padding-left: 6px;
+  padding-right: 6px;
+}

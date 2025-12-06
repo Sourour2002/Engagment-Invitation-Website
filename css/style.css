@@ -410,7 +410,7 @@ body {
 
 .letter .details {
     font-family: 'Rapunzel', 'Cormorant Garamond', serif;
-    font-size: clamp(1rem, 1.8vw, 0.85rem);
+    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
     color: hsl(30, 40%, 32%);
     position: relative;
     z-index: 1;
@@ -768,9 +768,4 @@ html {
   hyphens: auto;
   padding-left: 6px;
   padding-right: 6px;
-}
-
-.time {
-    font-size: clamp(0.5rem, 0.7vw, 0.75rem);
-    line-height: 1.2;
 }

@@ -192,375 +192,126 @@ setTimeout(() => {
     setupAudioToggle();
 }, 100);
 
-// Save invitation as image
-function generateInvitationImage() {
-    const canvas = document.createElement('canvas');
-    const width = 1200;
-    const height = 1600;
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
+// Save invitation as image using html2canvas
+async function generateInvitationImage() {
+    const saveBtn = document.getElementById('saveInvitationBtn');
+    const originalText = saveBtn.innerHTML;
     
-    // Draw background gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, 'hsl(275, 45%, 12%)');
-    gradient.addColorStop(1, 'hsl(270, 60%, 6%)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-    
-    // Draw stars
-    drawStars(ctx, width, height);
-    
-    // Draw floating lanterns in background
-    drawBackgroundLanterns(ctx, width, height);
-    
-    // Draw letter
-    drawLetter(ctx, width, height);
-    
-    // Convert canvas to blob and download
-    canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `Engagement-Invitation-${firstName}${lastName ? '-' + lastName : ''}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    }, 'image/png');
-}
-
-function drawStars(ctx, width, height) {
-    ctx.fillStyle = 'hsl(45, 100%, 95%)';
-    // Generate 60 stars similar to the page
-    for (let i = 0; i < 60; i++) {
-        const x = Math.random() * width;
-        const y = Math.random() * (height * 0.6);
-        const size = 2 + Math.random() * 2;
-        ctx.beginPath();
-        ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-function drawBackgroundLanterns(ctx, width, height) {
-    const lanternPositions = [
-        { x: 0.05, y: 0.85, size: 40 },
-        { x: 0.12, y: 0.8, size: 35 },
-        { x: 0.22, y: 0.88, size: 45 },
-        { x: 0.72, y: 0.8, size: 38 },
-        { x: 0.82, y: 0.85, size: 42 },
-        { x: 0.92, y: 0.75, size: 36 },
-        { x: 0.4, y: 0.9, size: 44 },
-        { x: 0.65, y: 0.85, size: 39 },
-        { x: 0.8, y: 0.92, size: 41 },
-        { x: 0.35, y: 0.8, size: 37 }
-    ];
-    
-    lanternPositions.forEach(pos => {
-        drawSimpleLantern(ctx, pos.x * width, pos.y * height, pos.size, 0.35);
-    });
-}
-
-function drawSimpleLantern(ctx, x, y, size, opacity) {
-    ctx.globalAlpha = opacity;
-    
-    // Glow effect
-    const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, size * 1.8);
-    glowGradient.addColorStop(0, 'hsla(45, 100%, 90%, 0.8)');
-    glowGradient.addColorStop(0.4, 'hsla(40, 95%, 75%, 0.6)');
-    glowGradient.addColorStop(1, 'hsla(25, 90%, 35%, 0)');
-    ctx.fillStyle = glowGradient;
-    ctx.beginPath();
-    ctx.ellipse(x, y, size * 1.8, size * 2, 0, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Main lantern body
-    ctx.fillStyle = 'hsl(35, 80%, 60%)';
-    ctx.fillRect(x - size / 2, y - size, size, size * 1.6);
-    
-    // Inner light
-    ctx.fillStyle = 'hsla(45, 100%, 85%, 0.7)';
-    ctx.fillRect(x - size / 2 + 4, y - size + 4, size - 8, size * 1.6 - 8);
-    
-    ctx.globalAlpha = 1;
-}
-
-function drawLetter(ctx, width, height) {
-    const letterWidth = 680;
-    const letterHeight = 880;
-    const letterX = (width - letterWidth) / 2;
-    const letterY = (height - letterHeight) / 2;
-    
-    // Letter background with gradient
-    const letterGradient = ctx.createLinearGradient(letterX, letterY, letterX + letterWidth, letterY + letterHeight);
-    letterGradient.addColorStop(0, 'hsl(35, 60%, 78%)');
-    letterGradient.addColorStop(0.25, 'hsl(30, 55%, 72%)');
-    letterGradient.addColorStop(0.5, 'hsl(35, 50%, 68%)');
-    letterGradient.addColorStop(0.75, 'hsl(30, 45%, 64%)');
-    letterGradient.addColorStop(1, 'hsl(35, 40%, 60%)');
-    
-    ctx.fillStyle = letterGradient;
-    ctx.beginPath();
-    ctx.roundRect(letterX, letterY, letterWidth, letterHeight, [12]);
-    ctx.fill();
-    
-    // Letter border shadow
-    ctx.strokeStyle = 'hsla(30, 40%, 50%, 0.4)';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.roundRect(letterX, letterY, letterWidth, letterHeight, [12]);
-    ctx.stroke();
-    
-    // Draw ribbon at top
-    drawRibbon(ctx, width / 2, letterY + 20, 80);
-    
-    // Draw decorative top border
-    drawTopBorder(ctx, letterX + 40, letterY + 60, letterWidth - 80);
-    
-    // Draw decorative bottom border
-    drawBottomBorder(ctx, letterX + 40, letterY + letterHeight - 60, letterWidth - 80);
-    
-    // Draw left and right accents
-    drawSideAccents(ctx, letterX + 30, letterY + 90, letterHeight - 180);
-    
-    // Draw sun symbol
-    drawSunSymbol(ctx, width / 2, letterY + 110, 48);
-    
-    // Draw title
-    ctx.font = 'bold 64px "Rapunzel", "Great Vibes", cursive';
-    ctx.fillStyle = 'hsl(275, 60%, 28%)';
-    ctx.textAlign = 'center';
-    ctx.shadowColor = 'hsla(275, 50%, 20%, 0.35)';
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetY = 4;
-    ctx.fillText("You're Invited", width / 2, letterY + 190);
-    ctx.shadowColor = 'transparent';
-    
-    // Draw guest name
-    ctx.font = 'italic 46px "Rapunzel", "Great Vibes", cursive';
-    ctx.fillStyle = 'hsl(275, 50%, 38%)';
-    ctx.shadowColor = 'hsla(275, 50%, 25%, 0.15)';
-    ctx.shadowBlur = 4;
-    ctx.shadowOffsetY = 2;
-    ctx.fillText(`Dear ${firstName}${lastName ? ' ' + lastName : ''}`, width / 2, letterY + 260);
-    ctx.shadowColor = 'transparent';
-    
-    // Draw message - with better formatting
-    ctx.font = '20px "Cormorant Garamond", serif';
-    ctx.fillStyle = 'hsl(30, 40%, 25%)';
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 1;
-    
-    // First line of message
-    const line1 = "At last we see the light, and it's leading us to forever.";
-    ctx.fillText(line1, width / 2, letterY + 330);
-    
-    // Blank line spacing
-    // Second part of message
-    const line2a = "We invite you to celebrate our engagement as we begin";
-    const line2b = "this magical new chapter together.";
-    ctx.fillText(line2a, width / 2, letterY + 390);
-    ctx.fillText(line2b, width / 2, letterY + 420);
-    
-    // Draw details section with styling
-    ctx.font = '22px "Rapunzel", "Cormorant Garamond", serif';
-    ctx.fillStyle = 'hsl(30, 35%, 30%)';
-    ctx.letterSpacing = '0.02em';
-    ctx.fillText('Save the Date', width / 2, letterY + 520);
-    
-    // Draw location as a styled element
-    ctx.font = 'bold 22px "Rapunzel", "Cormorant Garamond", serif';
-    ctx.fillStyle = 'hsl(275, 55%, 42%)';
-    ctx.fillText('Location', width / 2, letterY + 580);
-    
-    // Reset text align
-    ctx.textAlign = 'left';
-    ctx.shadowColor = 'transparent';
-    
-    // Draw decorative flowers
-    drawFlowerImproved(ctx, letterX + 50, letterY + letterHeight - 80, 'hsl(275, 60%, 70%)');
-    drawFlowerImproved(ctx, letterX + letterWidth - 50, letterY + letterHeight - 80, 'hsl(275, 60%, 70%)');
-}
-
-function drawRibbon(ctx, x, y, width) {
-    // Shadow
-    ctx.fillStyle = 'hsla(275, 50%, 35%, 0.3)';
-    ctx.beginPath();
-    ctx.ellipse(x, y + 3, width / 2 + 2, 12, 0, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Main ribbon
-    ctx.fillStyle = 'hsl(275, 55%, 50%)';
-    ctx.beginPath();
-    ctx.ellipse(x, y, width / 2, 10, 0, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Highlight
-    ctx.fillStyle = 'hsl(275, 65%, 65%)';
-    ctx.fillRect(x - width / 4, y - 4, width / 2, 4);
-}
-
-function drawTopBorder(ctx, x, y, width) {
-    ctx.strokeStyle = 'hsl(275, 50%, 60%)';
-    ctx.lineWidth = 2.5;
-    ctx.globalAlpha = 0.65;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    
-    const steps = 16;
-    for (let i = 0; i < steps; i++) {
-        const px = x + (width / steps) * i;
-        const py = y + (i % 2 === 0 ? -12 : 12);
-        ctx.lineTo(px, py);
-    }
-    ctx.lineTo(x + width, y);
-    ctx.stroke();
-    
-    // Draw decorative dots along border
-    ctx.fillStyle = 'hsl(275, 60%, 70%)';
-    ctx.globalAlpha = 0.8;
-    for (let i = 0; i < 6; i++) {
-        const dotX = x + (width / 5) * i;
-        ctx.beginPath();
-        ctx.arc(dotX, y, 3, 0, Math.PI * 2);
-        ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-}
-
-function drawBottomBorder(ctx, x, y, width) {
-    ctx.strokeStyle = 'hsl(275, 50%, 60%)';
-    ctx.lineWidth = 2.5;
-    ctx.globalAlpha = 0.65;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    
-    const steps = 16;
-    for (let i = 0; i < steps; i++) {
-        const px = x + (width / steps) * i;
-        const py = y + (i % 2 === 0 ? 12 : -12);
-        ctx.lineTo(px, py);
-    }
-    ctx.lineTo(x + width, y);
-    ctx.stroke();
-    
-    // Draw decorative dots along border
-    ctx.fillStyle = 'hsl(275, 60%, 70%)';
-    ctx.globalAlpha = 0.8;
-    for (let i = 0; i < 6; i++) {
-        const dotX = x + (width / 5) * i;
-        ctx.beginPath();
-        ctx.arc(dotX, y, 3, 0, Math.PI * 2);
-        ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-}
-
-function drawSideAccents(ctx, x, y, height) {
-    ctx.strokeStyle = 'hsl(275, 50%, 60%)';
-    ctx.lineWidth = 1.5;
-    ctx.globalAlpha = 0.5;
-    
-    // Left side
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    for (let i = 0; i < 4; i++) {
-        const py = y + (height / 4) * i;
-        ctx.lineTo(x, py);
-    }
-    ctx.stroke();
-    
-    // Right side
-    ctx.beginPath();
-    ctx.moveTo(x + 30, y);
-    for (let i = 0; i < 4; i++) {
-        const py = y + (height / 4) * i;
-        ctx.lineTo(x + 30, py);
-    }
-    ctx.stroke();
-    
-    ctx.globalAlpha = 1;
-}
-
-function drawSunSymbol(ctx, x, y, size) {
-    // Outer glow
-    ctx.fillStyle = 'hsla(40, 90%, 60%, 0.2)';
-    ctx.beginPath();
-    ctx.arc(x, y, size + 8, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Center circle - gradient
-    const sunGradient = ctx.createRadialGradient(x - 5, y - 5, 0, x, y, size / 2);
-    sunGradient.addColorStop(0, 'hsl(45, 100%, 70%)');
-    sunGradient.addColorStop(0.7, 'hsl(40, 90%, 55%)');
-    sunGradient.addColorStop(1, 'hsl(35, 85%, 45%)');
-    ctx.fillStyle = sunGradient;
-    ctx.beginPath();
-    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Rays
-    ctx.strokeStyle = 'hsl(40, 85%, 50%)';
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2;
-        const x1 = x + Math.cos(angle) * (size / 2 + 6);
-        const y1 = y + Math.sin(angle) * (size / 2 + 6);
-        const x2 = x + Math.cos(angle) * (size / 2 + 18);
-        const y2 = y + Math.sin(angle) * (size / 2 + 18);
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-    }
-    
-    // Inner highlight
-    ctx.fillStyle = 'hsl(45, 100%, 75%)';
-    ctx.beginPath();
-    ctx.arc(x - 3, y - 3, size / 4, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-function drawFlowerImproved(ctx, x, y, petalColor) {
-    const petalSize = 7;
-    ctx.fillStyle = petalColor;
-    
-    // Draw 5 petals with better shape
-    for (let i = 0; i < 5; i++) {
-        const angle = (i / 5) * Math.PI * 2 - Math.PI / 2;
-        const px = x + Math.cos(angle) * 11;
-        const py = y + Math.sin(angle) * 11;
+    try {
+        // Show loading state
+        saveBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10"></circle></svg>';
+        saveBtn.disabled = true;
         
-        // Petal glow
-        ctx.globalAlpha = 0.3;
-        ctx.fillStyle = petalColor;
-        ctx.beginPath();
-        ctx.ellipse(px, py, petalSize * 1.3, petalSize * 1.5, angle, 0, Math.PI * 2);
-        ctx.fill();
+        // Get the letter element
+        const letter = document.querySelector('.letter');
+        const letterContainer = document.getElementById('letterContainer');
         
-        // Petal
-        ctx.globalAlpha = 0.9;
-        ctx.fillStyle = petalColor;
-        ctx.beginPath();
-        ctx.arc(px, py, petalSize, 0, Math.PI * 2);
-        ctx.fill();
+        // Temporarily show the letter if it's hidden
+        const wasHidden = !letterContainer.classList.contains('show');
+        if (wasHidden) {
+            letterContainer.style.opacity = '0';
+            letterContainer.style.pointerEvents = 'none';
+            letterContainer.classList.add('show');
+            // Wait for letter to render
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        // Create wrapper for capture with background
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = `
+            position: fixed;
+            top: -10000px;
+            left: -10000px;
+            width: 1080px;
+            padding: 120px 80px;
+            background: linear-gradient(to top, hsl(275, 45%, 12%), hsl(270, 60%, 6%));
+            box-sizing: border-box;
+        `;
+        
+        // Clone the letter
+        const letterClone = letter.cloneNode(true);
+        letterClone.style.transform = 'scale(1) rotate(0deg)';
+        letterClone.style.opacity = '1';
+        letterClone.style.maxWidth = '100%';
+        letterClone.style.width = '100%';
+        letterClone.style.margin = '0 auto';
+        
+        // Remove close button from clone
+        const closeBtn = letterClone.querySelector('.close-btn');
+        if (closeBtn) closeBtn.remove();
+        
+        // Add stars to wrapper
+        const starsHTML = [];
+        for (let i = 0; i < 50; i++) {
+            const size = 2 + Math.random() * 2;
+            starsHTML.push(`
+                <div style="
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: hsl(45, 100%, 95%);
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    opacity: ${0.3 + Math.random() * 0.7};
+                "></div>
+            `);
+        }
+        wrapper.innerHTML = starsHTML.join('');
+        wrapper.appendChild(letterClone);
+        
+        document.body.appendChild(wrapper);
+        
+        // Capture with html2canvas
+        const canvas = await html2canvas(wrapper, {
+            scale: 2,
+            backgroundColor: null,
+            logging: false,
+            useCORS: true,
+            allowTaint: true
+        });
+        
+        // Clean up
+        document.body.removeChild(wrapper);
+        if (wasHidden) {
+            letterContainer.classList.remove('show');
+            letterContainer.style.opacity = '';
+            letterContainer.style.pointerEvents = '';
+        }
+        
+        // Convert to blob and download
+        canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Engagement-Invitation-${firstName}${lastName ? '-' + lastName : ''}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            // Reset button
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+        }, 'image/png');
+        
+    } catch (error) {
+        console.error('Error generating invitation:', error);
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+        alert('Sorry, there was an error generating the invitation image. Please try again.');
     }
-    
-    // Center
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = 'hsl(45, 85%, 60%)';
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Center highlight
-    ctx.fillStyle = 'hsl(45, 95%, 75%)';
-    ctx.beginPath();
-    ctx.arc(x - 1.5, y - 1.5, 2, 0, Math.PI * 2);
-    ctx.fill();
 }
+
+// Add spin animation for loading state
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
 
 // Add event listener to save button
 const saveBtn = document.getElementById('saveInvitationBtn');

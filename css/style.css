@@ -410,7 +410,7 @@ body {
 
 .letter .details {
     font-family: 'Rapunzel', 'Cormorant Garamond', serif;
-    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+    font-size: clamp(1rem, 1.8vw, 0.85rem);
     color: hsl(30, 40%, 32%);
     position: relative;
     z-index: 1;
@@ -720,22 +720,6 @@ html {
   hyphens: auto;
 }
 
-.letter .details {
-  font-family: 'Rapunzel', 'Cormorant Garamond', serif;
-  font-size: clamp(0.9rem, 2.6vw, 1rem);
-  color: hsl(30, 40%, 32%);
-  z-index: 1;
-  letter-spacing: 0.01em;
-  word-wrap: break-word;
-  hyphens: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(6px, 1vh, 12px);
-  margin-bottom: clamp(12px, 3vh, 20px);
-}
-
 .letter .location {
   font-weight: 600;
   font-size: clamp(0.9rem, 2.7vw, 1.05rem);
@@ -784,4 +768,9 @@ html {
   hyphens: auto;
   padding-left: 6px;
   padding-right: 6px;
+}
+
+.time {
+    font-size: clamp(0.5rem, 0.7vw, 0.75rem);
+    line-height: 1.2;
 }
